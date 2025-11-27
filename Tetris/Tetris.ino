@@ -5,11 +5,9 @@
 #define PIN_BUTON_DREAPTA 45 // Verde
 #define PIN_BUTON_JOS 47     // Rosu
 #define PIN_BUZER 49
-// matrice
 #define PIN_MATRICE_DIN 11
 #define PIN_MATRICE_CLK 13
 #define PIN_MATRICE_CS 10
-// Pini Registru Deplasare (7-Seg)
 #define PIN_REG_DATE 9
 #define PIN_REG_LATCH 8
 #define PIN_REG_CEAS 7
@@ -151,17 +149,16 @@ void setup() {
   pinMode(PIN_BUTON_JOS, INPUT);
 
   pinMode(PIN_BUZER, OUTPUT);
-  // Configurare Registru Deplasare
+  // config registru deplasare
   pinMode(PIN_REG_DATE, OUTPUT);
   pinMode(PIN_REG_LATCH, OUTPUT);
   pinMode(PIN_REG_CEAS, OUTPUT);
 
-  // Configurare Matrice (8 dispozitive)
+  // config matrice 8 dispoz
   for (int i = 0; i < 8; i++) {
     lc.shutdown(i, false);
     lc.setIntensity(i, 8);
     lc.clearDisplay(i);
-    // Initializam buffer-ul cu 0
     for (int r = 0; r < 8; r++)
       displayBuffer[i][r] = 0;
   }
@@ -179,7 +176,7 @@ void setup() {
 void loop() {
   unsigned long currentMillis = millis();
   citesteButoane();
-  // 2. GRAVITATIE
+  // gravitatia
   if (currentMillis - lastFallTime > vitezaCadere) {
     if (eValid(pozX, pozY + 1, rotatie)) {
       pozY++;
@@ -194,19 +191,18 @@ void loop() {
     lastFallTime = currentMillis;
   }
 
-  // 3. AFISARE
   actualizareMatrice();
   afisareScor(scor);
 }
 
-// --- LOGICA JOCULUI ---
+// logica
 
 void piesaNoua() {
   tipPiesa = random(0, 7);
   rotatie = 0;
   pozX = LATIME / 2 - 2;
   pozY = 0;
-  vitezaCadere = 500; // Reset viteza
+  vitezaCadere = 500;
 }
 
 bool eValid(int x, int y, int rot) {
@@ -215,9 +211,9 @@ bool eValid(int x, int y, int rot) {
     int py = y + forme[tipPiesa][rot][i][1];
 
     if (px < 0 || px >= LATIME || py >= INALTIME)
-      return false; // In afara hartii
+      return false;
     if (py >= 0 && harta[px][py] != 0)
-      return false; // Coliziune cu piese existente
+      return false; // coliziune
   }
   return true;
 }
@@ -267,7 +263,6 @@ void verificaLinii() {
   }
 }
 
-// --- INPUT ---
 void citesteButoane() {
   if (millis() - lastDebounce < debounceDelay)
     return;
@@ -298,25 +293,19 @@ void citesteButoane() {
   }
 
   if (digitalRead(PIN_BUTON_JOS) == HIGH) {
-    vitezaCadere = 50; // Viteza mare
+    vitezaCadere = 50;
     tone(PIN_BUZER, NOTE_B2, 10);
   } else {
-    vitezaCadere = 500; // Viteza normala
+    vitezaCadere = 500;
   }
 }
 
-// Fac matricea
-
-// Functie pentru a calcula starea unui pixel logic (x,y)
-// Returneaza true daca pixelul trebuie sa fie aprins
 bool starePixel(int x, int y) {
-  // 1. Verifica harta static
   if (x >= 0 && x < LATIME && y >= 0 && y < INALTIME) {
     if (harta[x][y])
       return true;
   }
 
-  // 2. Verifica piesa activa
   for (int i = 0; i < 4; i++) {
     int px = pozX + forme[tipPiesa][rotatie][i][0];
     int py = pozY + forme[tipPiesa][rotatie][i][1];
@@ -327,7 +316,7 @@ bool starePixel(int x, int y) {
   return false;
 }
 
-// Functie principala de desenare - scrie direct in buffer-ul hardware si face
+// Functie principala de desenare scrie direct in buffer-ul hardware si face
 // update doar la diferente
 void actualizareMatrice() {
   // Construim starea curenta a display-ului in memorie
@@ -340,21 +329,18 @@ void actualizareMatrice() {
   for (int y = 0; y < INALTIME; y++) {
     for (int x = 0; x < LATIME; x++) {
       if (starePixel(x, y)) {
-        // Mapare Logica -> Hardware
-        // Ecran Stanga: X Logic 0-7 -> Dispozitive 4-7 (Sus-Jos)
-        // Ecran Dreapta: X Logic 8-15 -> Dispozitive 0-3 (Sus-Jos)
 
         bool isLeftMatrix = (x < 8);
         int localX = isLeftMatrix ? x : (x - 8);
-        int localY = y; // 0-31
+        int localY = y;
 
-        int blockIndex = localY / 8; // 0..3
+        int blockIndex = localY / 8;
         int device = 0;
 
         if (isLeftMatrix) {
-          device = 7 - blockIndex; // 4,5,6,7 (invers pt Top to bottom)
+          device = 7 - blockIndex;
         } else {
-          device = 0 + blockIndex; // 0,1,2,3 (Standard)
+          device = 0 + blockIndex;
         }
 
         int hwRow = 0;    // Axa X
@@ -398,12 +384,8 @@ void afisareScor(int num) {
 
   for (int i = 0; i < 4; i++) {
     digitalWrite(PIN_REG_LATCH, LOW);
-
-    // 1. SELECTIE CIFRA (SR2) - Trimis Primul (ajunge in ultimul registru)
-    shiftOut(PIN_REG_DATE, PIN_REG_CEAS, MSBFIRST, digitsSelect[i]);
-
-    // 2. SEGMENTE (SR1) - Trimis Al Doilea (ramane in primul registru)
-    shiftOut(PIN_REG_DATE, PIN_REG_CEAS, MSBFIRST, digitMap[digits[i]]);
+    shiftOut(PIN_REG_DATE, PIN_REG_CEAS, MSBFIRST, digitsSelect[i]);     // SR2
+    shiftOut(PIN_REG_DATE, PIN_REG_CEAS, MSBFIRST, digitMap[digits[i]]); // SR1
 
     digitalWrite(PIN_REG_LATCH, HIGH);
   }

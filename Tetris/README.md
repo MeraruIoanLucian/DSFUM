@@ -1,74 +1,74 @@
-# Tetris pe Arduino Mega (Simulare Wokwi)
+# Tetris on Arduino Mega (Wokwi Simulation)
 
 ![Arduino](https://img.shields.io/badge/Arduino-Mega-00979D?style=for-the-badge&logo=arduino&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Complet-success?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
 
-O implementare complet functionala a jocului Tetris pentru Arduino Mega, proiectata si simulata in Wokwi. Acest proiect include un driver personalizat pentru matricea LED 16x32, afisaj de scor pe 7 segmente si efecte sonore.
+A fully functional, classic Tetris implementation built for the **Arduino Mega**, designed and simulated within the Wokwi environment. This project features a custom driver for a 16x32 LED matrix display, a 7-segment score tracker, and non-blocking sound effects.
 
-## 🎮 Functionalitati
+## 🎮 Core Features
 
-### 1. Driver Avansat pentru Afisaj
--   **Hardware**: 8x Matrice LED 8x8 MAX7219 conectate in serie.
--   **Rezolutie**: 16x32 pixeli (Impartit in doua blocuri 8x32).
--   **Calibrare Personalizata**:
-    -   Gestioneaza rotatia fizica complexa (90° Bloc Stanga / 270° Bloc Dreapta).
-    -   Corecteaza cablarea non-standard si orientarea gravitatiei.
--   **Fara Palpaire**: Implementeaza double-buffering conditional pentru o randare fluida la 60FPS.
+### 1. Advanced Custom Display Driver
+-   **Hardware**: 8x MAX7219 8x8 LED Matrices daisy-chained.
+-   **Resolution**: 16x32 pixels (Split across two 8x32 blocks).
+-   **Custom Calibration Logic**:
+    -   Manages complex physical rotation (90° Left Block / 270° Right Block).
+    -   Corrects non-standard wiring and gravity orientation issues.
+-   **Flicker-Free Rendering**: Implements conditional double-buffering for a smooth 60 FPS refresh rate.
 
-### 2. Logica Clasica de Joc
--   **Forme**: Implementare completa a formelor standard (I, J, L, O, S, T, Z).
--   **Mecanici**:
-    -   Miscare Stanga/Dreapta
-    -   Rotire (90°)
-    -   Cadere Rapida (Soft Drop)
-    -   Eliminare Linii & Gravitatie
-    -   Detectie Sfarsit Joc (Game Over)
+### 2. Classic Game Mechanics
+-   **Tetrominos**: Full implementation of all standard pieces (I, J, L, O, S, T, Z).
+-   **Mechanics Included**:
+    -   Left/Right Movement
+    -   Rotation (90° increments)
+    -   Soft Drop (Fast Fall)
+    -   Line Clearing & Gravity
+    -   Game Over Detection
 
-### 3. Integrare Hardware
--   **Afisaj Scor**: Afisaj 7-Segmente cu 4 cifre controlat de 2x Registre de Deplasare 74HC595.
--   **Sunet**: Buzzer Pasiv cu generare de tonuri non-blocante (optimizat pentru a nu bloca procesorul).
--   **Intrare**: Control cu 4 butoane si debounce software.
+### 3. Hardware Integration
+-   **Score Display**: 4-digit 7-segment display controlled by 2x 74HC595 Shift Registers.
+-   **Sound**: Passive Buzzer with non-blocking tone generation (optimized not to halt the main loop).
+-   **Input**: Control handled via 4 push buttons, implemented with software debouncing.
 
-## 🛠️ Configurare Hardware (Wokwi)
+## 🛠️ Hardware Configuration (Wokwi)
 
-| Componenta | Pin / Conexiune | Note |
+| Component | Pin / Connection | Notes |
 | :--- | :--- | :--- |
-| **Matrice LED (DIN)** | Pin 11 | Data In |
-| **Matrice LED (CLK)** | Pin 13 | Clock |
-| **Matrice LED (CS)** | Pin 10 | Chip Select |
-| **Registru Deplasare (DATA)** | Pin 9 | 74HC595 DS |
-| **Registru Deplasare (LATCH)** | Pin 8 | 74HC595 STCP |
-| **Registru Deplasare (CLOCK)** | Pin 7 | 74HC595 SHCP |
-| **Buzzer** | Pin 49 | Pasiv |
-| **Buton (Rotire)** | Pin 41 | Albastru |
-| **Buton (Stanga)** | Pin 43 | Galben |
-| **Buton (Dreapta)** | Pin 45 | Verde |
-| **Buton (Jos)** | Pin 47 | Rosu |
+| **LED Matrix (DIN)** | Pin 11 | Data In |
+| **LED Matrix (CLK)** | Pin 13 | Clock |
+| **LED Matrix (CS)** | Pin 10 | Chip Select |
+| **Shift Register (DATA)** | Pin 9 | 74HC595 DS |
+| **Shift Register (LATCH)** | Pin 8 | 74HC595 STCP |
+| **Shift Register (CLOCK)** | Pin 7 | 74HC595 SHCP |
+| **Buzzer** | Pin 49 | Passive |
+| **Button (Rotate)** | Pin 41 | Blue |
+| **Button (Left)** | Pin 43 | Yellow |
+| **Button (Right)** | Pin 45 | Green |
+| **Button (Drop)** | Pin 47 | Red |
 
-## 🚀 Cum sa Rulezi
+## 🚀 Getting Started
 
-1.  Deschide proiectul in [Wokwi](https://wokwi.com/).
-2.  Incarca `Tetris.ino`.
-3.  Porneste simularea.
+1.  Open the project in [Wokwi](https://wokwi.com/).
+2.  Upload the `Tetris.ino` file.
+3.  Start the simulation.
 
-### Controale
+### Controls
 
--   🔵 **Albastru**: Rotire Piesa
--   🟡 **Galben**: Miscare Stanga
--   🟢 **Verde**: Miscare Dreapta
--   🔴 **Rosu**: Cadere Rapida
+-   🔵 **Blue**: Rotate Piece
+-   🟡 **Yellow**: Move Left
+-   🟢 **Green**: Move Right
+-   🔴 **Red**: Fast Drop
 
-## 📂 Structura Proiectului
+## 📂 Project Structure
 
--   `Tetris.ino`: Codul sursa principal care contine motorul jocului, driverul de afisaj si logica hardware.
--   `LedControl.h`: Biblioteca pentru controlul matricelor MAX7219.
--   `diagram.json`: Configuratia simularii Wokwi.
+-   `Tetris.ino`: The main source code containing the game engine, display driver, and hardware logic.
+-   `LedControl.h`: Library used for interfacing with the MAX7219 matrices.
+-   `diagram.json`: The Wokwi simulation configuration file.
 
-## 🧠 Detalii Tehnice
+## 🧠 Technical Deep Dive
 
--   **Mapare Matrice**: Proiectul foloseste un sistem complex de transformare a coordonatelor pentru a mapa o grila logica 16x32 pe 8 matrice 8x8 rotite fizic si conectate in serie.
--   **Optimizare**: Bucla principala este limitata la ~60Hz pentru a echilibra rata de reimprospatare a afisajului cu generarea tonurilor prin intreruperi, asigurand redarea corecta a sunetului.
+-   **Matrix Mapping**: The project uses a sophisticated coordinate transformation system to correctly map a logical 16x32 game grid onto 8 physically rotated and daisy-chained 8x8 matrices.
+-   **Performance Optimization**: The main loop is capped at approximately 60Hz to balance the display refresh rate with the interrupt-driven tone generation, ensuring smooth gameplay and accurate sound rendering.
 
-## 📜 Licenta
+## 📜 License
 
-Acest proiect este open source. Simte-te liber sa il folosesti si sa il modifici pentru invatare!
+This project is released under an open-source license. Feel free to clone, use, and modify it for learning purposes!

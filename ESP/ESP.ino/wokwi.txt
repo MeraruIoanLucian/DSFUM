@@ -1,0 +1,12 @@
+IRremote
+Stepper
+
+Folositi o pereche IR-Remote, IR-sensor + 1 stepper motor + 1 stepper driver pentru a putea roti motorul cu o anumita configuratie. 
+Stabilirea unei configuratii:
+apasam lung tasta X pana cand pe ESP incepe sa faca blink ledul conectat la pinul 2
+apasam pe telecomanda 4 valori numerice despartite de tasta Y si finalizam cu tasta X
+exemplu: 0Y30Y9Y4X  care inseamna ca motorul incepe sa se invarta in directia 0 (LEFT), face 30 grade, apoi revine inapoi in total de 9 ori, cu viteza 4.
+directiile pot fi 0 - LEFT / 1 - RIGHT
+unghiul poate fi orice valoare insa nu 0
+numarul de intoarceri poate fi oricat, insa nu 0
+viteza poate fi orice valoare intre 1 si 9 (1 foarte repede, 9 - foarte incet)

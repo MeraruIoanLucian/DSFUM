@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "author": "ESP32 IR Stepper Controller",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-ir-receiver",
+      "id": "ir1",
+      "top": -50,
+      "left": 150,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-ir-remote",
+      "id": "remote1",
+      "top": -150,
+      "left": 150,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -50,
+      "left": -50,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 0,
+      "left": -80,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper1",
+      "top": 200,
+      "left": 100,
+      "attrs": {
+        "display": "steps",
+        "gearRatio": "1:1"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "ir1:VCC",
+      "esp:3V3",
+      "red",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "ir1:GND",
+      "esp:GND.1",
+      "black",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "ir1:DAT",
+      "esp:15",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "led1:C",
+      "esp:GND.2",
+      "black",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "led1:A",
+      "r1:2",
+      "red",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "r1:1",
+      "esp:2",
+      "red",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "stepper1:A-",
+      "esp:26",
+      "orange",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "stepper1:A+",
+      "esp:27",
+      "yellow",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "stepper1:B-",
+      "esp:14",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "stepper1:B+",
+      "esp:12",
+      "blue",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "stepper1:GND",
+      "esp:GND.3",
+      "black",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "stepper1:VCC",
+      "esp:VIN",
+      "red",
+      [
+        "h0"
+      ]
+    ]
+  ],
+  "serialMonitor": {
+    "display": "auto",
+    "newline": "lf"
+  }
+}
